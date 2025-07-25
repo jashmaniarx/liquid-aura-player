@@ -2,104 +2,136 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* LQD Music - Liquid Glass Design System
+   Glassmorphism music player inspired by iOS 17 & VisionOS
+   All colors MUST be HSL for proper glass effects
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base Dark Theme - Charcoal Black with Blue Undertones */
+    --background: 220 25% 6%;
+    --background-deep: 220 30% 4%;
+    --background-surface: 220 20% 8%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Glass Panel Colors */
+    --glass-background: 0 0% 100%;
+    --glass-border: 0 0% 100%;
+    --glass-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Neon Accent Colors */
+    --neon-aqua: 190 100% 60%;
+    --neon-violet: 270 85% 76%;
+    --neon-soft: 200 100% 80%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Glass Effects */
+    --glass-blur: blur(40px);
+    --glass-opacity: 0.15;
+    --glass-border-opacity: 0.2;
+    
+    /* Shadows & Depth */
+    --shadow-glass: 0 8px 32px 0 hsl(220 30% 2% / 0.37);
+    --shadow-glass-lg: 0 16px 48px 0 hsl(220 30% 2% / 0.5);
+    --shadow-glow-aqua: 0 0 40px hsl(var(--neon-aqua) / 0.3);
+    --shadow-glow-violet: 0 0 40px hsl(var(--neon-violet) / 0.3);
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Typography */
+    --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-text: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Border Radius */
+    --radius-glass: 24px;
+    --radius-control: 20px;
+    --radius-capsule: 50px;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Animations */
+    --transition-glass: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-glow: all 0.3s ease-out;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Component Specific */
+    --album-size: 280px;
+    --control-size: 64px;
+    --control-size-sm: 48px;
+  }
+}
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+/* Glass Component Utilities */
+@layer components {
+  .glass-panel {
+    background: hsl(var(--glass-background) / var(--glass-opacity));
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid hsl(var(--glass-border) / var(--glass-border-opacity));
+    border-radius: var(--radius-glass);
+    box-shadow: var(--shadow-glass);
+    transition: var(--transition-glass);
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  .glass-control {
+    background: hsl(var(--glass-background) / 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--glass-border) / 0.15);
+    border-radius: var(--radius-control);
+    box-shadow: var(--shadow-glass);
+    transition: var(--transition-glass);
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  .glass-control:hover {
+    background: hsl(var(--glass-background) / 0.2);
+    border-color: hsl(var(--neon-aqua) / 0.3);
+    box-shadow: var(--shadow-glass), var(--shadow-glow-aqua);
+    transform: translateY(-2px);
+  }
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+  .glass-control:active {
+    transform: translateY(0);
+    background: hsl(var(--glass-background) / 0.25);
+  }
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+  .neon-glow {
+    filter: drop-shadow(0 0 20px hsl(var(--neon-aqua) / 0.6));
+  }
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+  .text-glass {
+    color: hsl(var(--glass-foreground) / 0.9);
+    text-shadow: 0 2px 8px hsl(220 30% 2% / 0.5);
+  }
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+  .progress-track {
+    background: hsl(var(--glass-background) / 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-capsule);
+    overflow: hidden;
+  }
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  .progress-fill {
+    background: linear-gradient(90deg, 
+      hsl(var(--neon-aqua)), 
+      hsl(var(--neon-soft))
+    );
+    box-shadow: 0 0 20px hsl(var(--neon-aqua) / 0.5);
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-0;
   }
 
   body {
-    @apply bg-background text-foreground;
+    background: linear-gradient(135deg, 
+      hsl(var(--background-deep)) 0%, 
+      hsl(var(--background)) 50%, 
+      hsl(var(--background-surface)) 100%
+    );
+    color: hsl(var(--foreground));
+    font-family: var(--font-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
   }
 }
