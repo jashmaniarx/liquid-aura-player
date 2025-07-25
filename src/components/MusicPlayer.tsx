@@ -1,174 +1,156 @@
 import { useState } from 'react';
-import { Search, Home, Library, Plus } from 'lucide-react';
-import { playlists } from '@/data/songs';
-import { useMusicPlayer } from '@/hooks/useMusicPlayer';
-import PlaylistView from './PlaylistView';
-import SearchView from './SearchView';
-import MusicPlayerControls from './MusicPlayerControls';
-
-type View = 'home' | 'search' | 'library' | 'playlist';
+import { Play, Pause, SkipBack, SkipForward, Shuffle, Repeat, Volume2 } from 'lucide-react';
+import albumCover from '@/assets/album-cover.jpg';
 
 const MusicPlayer = () => {
-  const [currentView, setCurrentView] = useState<View>('home');
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>('');
-  const { playSong } = useMusicPlayer();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(42);
+  const [volume, setVolume] = useState(75);
+  const [isShuffleOn, setIsShuffleOn] = useState(false);
+  const [repeatMode, setRepeatMode] = useState('off'); // 'off', 'all', 'one'
 
-  const selectedPlaylist = playlists.find(p => p.id === selectedPlaylistId);
-
-  const handlePlaylistSelect = (playlistId: string) => {
-    setSelectedPlaylistId(playlistId);
-    setCurrentView('playlist');
+  const song = {
+    title: "Liquid Dreams",
+    artist: "Neon Waves",
+    album: "Digital Horizons",
+    duration: "3:24",
+    currentTime: "1:26"
   };
 
-  const handleBackToHome = () => {
-    setCurrentView('home');
-    setSelectedPlaylistId('');
-  };
+  const queue = [
+    { title: "Synthwave Nights", artist: "Cyber Echo", duration: "4:12" },
+    { title: "Glass Reflections", artist: "Aurora Bass", duration: "3:48" },
+    { title: "Virtual Reality", artist: "Tech Minds", duration: "5:02" }
+  ];
 
-  const renderView = () => {
-    switch (currentView) {
-      case 'search':
-        return <SearchView onBack={handleBackToHome} />;
-      case 'playlist':
-        if (selectedPlaylist) {
-          return <PlaylistView playlist={selectedPlaylist} onBack={handleBackToHome} />;
-        }
-        return renderHomeView();
-      default:
-        return renderHomeView();
-    }
-  };
-
-  const renderHomeView = () => (
-    <div className="min-h-screen p-8 pb-32">
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 relative overflow-hidden">
       {/* Floating Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-neon-aqua/10 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-neon-violet/10 rounded-full blur-3xl animate-float" style={{animationDelay: '2s'}} />
       </div>
 
-      {/* Header */}
-      <div className="glass-panel p-8 mb-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-neon-aqua/20 via-transparent to-neon-violet/20 pointer-events-none" />
-        <div className="relative z-10">
-          <h1 className="font-display text-5xl font-bold text-glass mb-2 tracking-tight">
-            LQD Music
+      {/* Main Player Container */}
+      <div className="glass-panel w-full max-w-md p-8 animate-float relative z-10">
+        
+        {/* Album Artwork */}
+        <div className="relative mb-8 group">
+          <div className="glass-panel p-4 mx-auto w-fit relative overflow-hidden">
+            <img 
+              src={albumCover}
+              alt={`${song.album} cover`}
+              className="w-72 h-72 rounded-2xl object-cover shadow-glass-lg"
+            />
+            {/* Shimmer Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-glass-background/20 to-transparent transform -skew-x-12 group-hover:animate-glass-shimmer" />
+          </div>
+        </div>
+
+        {/* Song Info */}
+        <div className="text-center mb-8">
+          <h1 className="font-display text-3xl font-semibold text-glass mb-2 tracking-tight">
+            {song.title}
           </h1>
-          <p className="text-glass/70 text-xl">Liquid Glass Experience</p>
+          <p className="text-glass/70 text-lg mb-1">{song.artist}</p>
+          <p className="text-glass/50 text-sm">{song.album}</p>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="progress-track h-2 mb-3 relative cursor-pointer group">
+            <div 
+              className="progress-fill h-full rounded-capsule transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+            <div 
+              className="absolute top-1/2 w-4 h-4 bg-neon-aqua rounded-full transform -translate-y-1/2 shadow-glow-aqua opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ left: `calc(${progress}% - 8px)` }}
+            />
+          </div>
+          <div className="flex justify-between text-glass/60 text-sm">
+            <span>{song.currentTime}</span>
+            <span>{song.duration}</span>
+          </div>
+        </div>
+
+        {/* Main Controls */}
+        <div className="flex items-center justify-center gap-6 mb-8">
+          <button 
+            className="glass-control w-12 h-12 flex items-center justify-center hover:shadow-glow-aqua transition-all duration-300"
+            onClick={() => setIsShuffleOn(!isShuffleOn)}
+          >
+            <Shuffle 
+              size={20} 
+              className={`text-glass transition-colors duration-300 ${isShuffleOn ? 'text-neon-aqua' : ''}`} 
+            />
+          </button>
+
+          <button className="glass-control w-16 h-16 flex items-center justify-center hover:shadow-glow-aqua">
+            <SkipBack size={24} className="text-glass" />
+          </button>
+
+          <button 
+            className="glass-control w-20 h-20 flex items-center justify-center hover:shadow-glow-aqua neon-glow"
+            onClick={() => setIsPlaying(!isPlaying)}
+          >
+            {isPlaying ? (
+              <Pause size={32} className="text-glass" />
+            ) : (
+              <Play size={32} className="text-glass ml-1" />
+            )}
+          </button>
+
+          <button className="glass-control w-16 h-16 flex items-center justify-center hover:shadow-glow-aqua">
+            <SkipForward size={24} className="text-glass" />
+          </button>
+
+          <button 
+            className="glass-control w-12 h-12 flex items-center justify-center hover:shadow-glow-aqua transition-all duration-300"
+            onClick={() => setRepeatMode(repeatMode === 'off' ? 'all' : repeatMode === 'all' ? 'one' : 'off')}
+          >
+            <Repeat 
+              size={20} 
+              className={`text-glass transition-colors duration-300 ${repeatMode !== 'off' ? 'text-neon-violet' : ''}`} 
+            />
+          </button>
+        </div>
+
+        {/* Volume Control */}
+        <div className="flex items-center gap-4 mb-8">
+          <Volume2 size={20} className="text-glass/70" />
+          <div className="flex-1 progress-track h-2 relative cursor-pointer group">
+            <div 
+              className="progress-fill h-full rounded-capsule"
+              style={{ width: `${volume}%` }}
+            />
+            <div 
+              className="absolute top-1/2 w-3 h-3 bg-neon-soft rounded-full transform -translate-y-1/2 shadow-glow-aqua opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ left: `calc(${volume}% - 6px)` }}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <button 
-          onClick={() => setCurrentView('search')}
-          className="glass-control p-6 text-center hover:shadow-glow-aqua group relative overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-neon-aqua/10 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-control" />
-          <Search size={32} className="mx-auto mb-3 text-glass group-hover:text-neon-aqua transition-colors duration-300" />
-          <p className="font-medium text-glass group-hover:text-neon-aqua transition-colors duration-300">Search</p>
-        </button>
-
-        <button className="glass-control p-6 text-center hover:shadow-glow-violet group relative overflow-hidden">
-          <div className="absolute inset-0 bg-neon-violet/10 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-control" />
-          <Library size={32} className="mx-auto mb-3 text-glass group-hover:text-neon-violet transition-colors duration-300" />
-          <p className="font-medium text-glass group-hover:text-neon-violet transition-colors duration-300">Library</p>
-        </button>
-
-        <button className="glass-control p-6 text-center hover:shadow-glow-aqua group relative overflow-hidden">
-          <div className="absolute inset-0 bg-neon-aqua/10 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-control" />
-          <Plus size={32} className="mx-auto mb-3 text-glass group-hover:text-neon-aqua transition-colors duration-300" />
-          <p className="font-medium text-glass group-hover:text-neon-aqua transition-colors duration-300">Create</p>
-        </button>
-
-        <button className="glass-control p-6 text-center hover:shadow-glow-violet group relative overflow-hidden">
-          <div className="absolute inset-0 bg-neon-violet/10 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-control" />
-          <Home size={32} className="mx-auto mb-3 text-glass group-hover:text-neon-violet transition-colors duration-300" />
-          <p className="font-medium text-glass group-hover:text-neon-violet transition-colors duration-300">Home</p>
-        </button>
-      </div>
-
-      {/* Featured Playlists */}
-      <div className="glass-panel p-8">
-        <h2 className="font-display text-3xl font-semibold text-glass mb-8 tracking-tight">
-          Your Playlists
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {playlists.map((playlist) => (
-            <div 
-              key={playlist.id}
-              className="glass-control p-6 cursor-pointer group relative overflow-hidden hover:shadow-glow-aqua transition-all duration-300"
-              onClick={() => handlePlaylistSelect(playlist.id)}
-            >
-              {/* Ripple effect background */}
-              <div className="absolute inset-0 bg-neon-aqua/10 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-control" />
-              
-              <div className="relative z-10">
-                <div className="glass-panel p-3 mb-4 w-fit relative group-hover:shadow-glow-aqua transition-all duration-300">
-                  <img 
-                    src={playlist.coverUrl}
-                    alt={playlist.name}
-                    className="w-24 h-24 rounded-2xl object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-glass-background/20 to-transparent transform -skew-x-12 group-hover:animate-glass-shimmer" />
+      {/* Now Playing Queue */}
+      <div className="glass-panel w-full max-w-md mt-6 p-6 relative z-10">
+        <h3 className="font-display text-lg font-semibold text-glass mb-4">Up Next</h3>
+        <div className="space-y-3">
+          {queue.map((track, index) => (
+            <div key={index} className="glass-control p-4 hover:bg-glass-background/20 cursor-pointer group">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-glass font-medium text-sm group-hover:text-neon-aqua transition-colors duration-300">
+                    {track.title}
+                  </p>
+                  <p className="text-glass/60 text-xs">{track.artist}</p>
                 </div>
-                
-                <h3 className="font-display text-xl font-semibold text-glass mb-2 group-hover:text-neon-aqua transition-colors duration-300">
-                  {playlist.name}
-                </h3>
-                <p className="text-glass/70 mb-3">{playlist.description}</p>
-                <p className="text-glass/50 text-sm">{playlist.songs.length} songs</p>
+                <span className="text-glass/50 text-xs">{track.duration}</span>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Recently Played */}
-      <div className="glass-panel p-8 mt-8">
-        <h2 className="font-display text-3xl font-semibold text-glass mb-8 tracking-tight">
-          Quick Play
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {playlists.slice(0, 4).map((playlist) => (
-            <div 
-              key={`quick-${playlist.id}`}
-              className="glass-control p-4 cursor-pointer group flex items-center gap-4 hover:shadow-glow-violet relative overflow-hidden"
-              onClick={() => {
-                if (playlist.songs.length > 0) {
-                  playSong(playlist.songs[0], playlist.songs);
-                }
-              }}
-            >
-              <div className="absolute inset-0 bg-neon-violet/10 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-control" />
-              
-              <div className="w-16 h-16 rounded-xl overflow-hidden shadow-glass relative z-10">
-                <img 
-                  src={playlist.coverUrl}
-                  alt={playlist.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              
-              <div className="flex-1 min-w-0 relative z-10">
-                <h3 className="font-medium text-glass group-hover:text-neon-violet transition-colors duration-300 truncate">
-                  {playlist.name}
-                </h3>
-                <p className="text-glass/60 text-sm truncate">{playlist.songs.length} songs</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="min-h-screen relative">
-      {renderView()}
-      <MusicPlayerControls />
     </div>
   );
 };

@@ -56,152 +56,60 @@
   }
 }
 
-/* Enhanced Liquid Glass Component Utilities */
+/* Glass Component Utilities */
 @layer components {
   .glass-panel {
-    background: linear-gradient(135deg, 
-      hsl(var(--glass-background) / 0.15) 0%, 
-      hsl(var(--glass-background) / 0.1) 100%
-    );
-    backdrop-filter: var(--glass-blur) saturate(180%);
+    background: hsl(var(--glass-background) / var(--glass-opacity));
+    backdrop-filter: var(--glass-blur);
     border: 1px solid hsl(var(--glass-border) / var(--glass-border-opacity));
     border-radius: var(--radius-glass);
-    box-shadow: var(--shadow-glass), 
-                inset 0 1px 0 hsl(var(--glass-background) / 0.2);
+    box-shadow: var(--shadow-glass);
     transition: var(--transition-glass);
-    position: relative;
-  }
-
-  .glass-panel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-      transparent, 
-      hsl(var(--glass-background) / 0.3), 
-      transparent
-    );
-    border-radius: var(--radius-glass) var(--radius-glass) 0 0;
   }
 
   .glass-control {
-    background: linear-gradient(135deg, 
-      hsl(var(--glass-background) / 0.12) 0%, 
-      hsl(var(--glass-background) / 0.08) 100%
-    );
-    backdrop-filter: blur(20px) saturate(180%);
+    background: hsl(var(--glass-background) / 0.1);
+    backdrop-filter: blur(20px);
     border: 1px solid hsl(var(--glass-border) / 0.15);
     border-radius: var(--radius-control);
     box-shadow: var(--shadow-glass);
     transition: var(--transition-glass);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .glass-control::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-      transparent, 
-      hsl(var(--glass-background) / 0.25), 
-      transparent
-    );
-    border-radius: var(--radius-control) var(--radius-control) 0 0;
   }
 
   .glass-control:hover {
-    background: linear-gradient(135deg, 
-      hsl(var(--glass-background) / 0.2) 0%, 
-      hsl(var(--glass-background) / 0.15) 100%
-    );
+    background: hsl(var(--glass-background) / 0.2);
     border-color: hsl(var(--neon-aqua) / 0.3);
     box-shadow: var(--shadow-glass), var(--shadow-glow-aqua);
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-2px);
   }
 
   .glass-control:active {
-    transform: translateY(0) scale(1);
-    background: linear-gradient(135deg, 
-      hsl(var(--glass-background) / 0.25) 0%, 
-      hsl(var(--glass-background) / 0.2) 100%
-    );
+    transform: translateY(0);
+    background: hsl(var(--glass-background) / 0.25);
   }
 
   .neon-glow {
-    filter: drop-shadow(0 0 20px hsl(var(--neon-aqua) / 0.6))
-            drop-shadow(0 0 40px hsl(var(--neon-aqua) / 0.4));
+    filter: drop-shadow(0 0 20px hsl(var(--neon-aqua) / 0.6));
   }
 
   .text-glass {
     color: hsl(var(--glass-foreground) / 0.9);
-    text-shadow: 0 2px 8px hsl(220 30% 2% / 0.5),
-                 0 0 16px hsl(var(--neon-aqua) / 0.1);
+    text-shadow: 0 2px 8px hsl(220 30% 2% / 0.5);
   }
 
   .progress-track {
-    background: linear-gradient(90deg,
-      hsl(var(--glass-background) / 0.1) 0%,
-      hsl(var(--glass-background) / 0.15) 50%,
-      hsl(var(--glass-background) / 0.1) 100%
-    );
+    background: hsl(var(--glass-background) / 0.1);
     backdrop-filter: blur(10px);
-    border: 1px solid hsl(var(--glass-border) / 0.1);
     border-radius: var(--radius-capsule);
     overflow: hidden;
-    position: relative;
-  }
-
-  .progress-track::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-      transparent, 
-      hsl(var(--glass-background) / 0.3), 
-      transparent
-    );
   }
 
   .progress-fill {
     background: linear-gradient(90deg, 
-      hsl(var(--neon-aqua)) 0%, 
-      hsl(var(--neon-soft)) 50%,
-      hsl(var(--neon-violet)) 100%
+      hsl(var(--neon-aqua)), 
+      hsl(var(--neon-soft))
     );
-    box-shadow: 0 0 20px hsl(var(--neon-aqua) / 0.5),
-                0 0 40px hsl(var(--neon-aqua) / 0.3),
-                inset 0 1px 0 hsl(var(--glass-background) / 0.2);
-    position: relative;
-  }
-
-  .progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      hsl(var(--glass-background) / 0.2) 50%,
-      transparent 100%
-    );
-    animation: progress-shimmer 2s ease-in-out infinite;
-  }
-
-  @keyframes progress-shimmer {
-    0%, 100% { transform: translateX(-100%); }
-    50% { transform: translateX(100%); }
+    box-shadow: 0 0 20px hsl(var(--neon-aqua) / 0.5);
   }
 }
 
@@ -211,69 +119,19 @@
   }
 
   body {
-    background: 
-      radial-gradient(circle at 20% 80%, hsl(var(--neon-violet) / 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, hsl(var(--neon-aqua) / 0.1) 0%, transparent 50%),
-      linear-gradient(135deg, 
-        hsl(var(--background-deep)) 0%, 
-        hsl(var(--background)) 50%, 
-        hsl(var(--background-surface)) 100%
-      );
+    background: linear-gradient(135deg, 
+      hsl(var(--background-deep)) 0%, 
+      hsl(var(--background)) 50%, 
+      hsl(var(--background-surface)) 100%
+    );
     color: hsl(var(--foreground));
     font-family: var(--font-text);
     min-height: 100vh;
     overflow-x: hidden;
-    position: relative;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 50% 50%, hsl(var(--neon-aqua) / 0.05) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: -1;
-    animation: ambient-pulse 8s ease-in-out infinite;
-  }
-
-  @keyframes ambient-pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.02em;
-  }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: hsl(var(--glass-background) / 0.1);
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg,
-      hsl(var(--neon-aqua) / 0.3),
-      hsl(var(--neon-violet) / 0.3)
-    );
-    border-radius: 4px;
-    backdrop-filter: blur(10px);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg,
-      hsl(var(--neon-aqua) / 0.5),
-      hsl(var(--neon-violet) / 0.5)
-    );
   }
 }
